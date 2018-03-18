@@ -2,3 +2,13 @@
   font-family: monospace;
   font-weight: 200;
 }
+
+body{
+  text-align: center;
+  margin:auto;
+  width:80%;
+}
+
+.hidden{
+  display: none;
+}
