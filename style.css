@@ -12,3 +12,15 @@ body{
 .hidden{
   display: none;
 }
+
+table{
+  border: 1px solid black;
+  width: 300px;
+  height: 300px;
+  margin: auto;
+}
+
+table td {
+  border: 1px solid black;
+  cursor: pointer;
+}
