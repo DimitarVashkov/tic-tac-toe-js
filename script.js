@@ -6,6 +6,8 @@ const multiplayer = document.querySelector('#multiplayer');
 const options = document.querySelector('#options');
 const board = document.querySelector('#board');
 const gameSpaces = document.querySelectorAll('.space');
+const gameStatus = document.querySelector('#gameStatus');
+const reset = document.querySelector('#reset');
 
 // Factory for player
 const playerFactory = (name, symbol) => {
@@ -16,6 +18,7 @@ const playerFactory = (name, symbol) => {
 const boardFactory = () => {
   let board = ['', '', '', '', '', '', '', '', ''];
   const update = (index, symbol) => board[index] = symbol;
+  const reset = () => board = ['', '', '', '', '', '', '', '', ''];
   const won = () => {
     if (board[0] == board[1] && board[1] == board[2] && board[0].length != 0) {
       console.log('Rule 1');
@@ -46,7 +49,7 @@ const boardFactory = () => {
     }
   };
 
-  return { board, update, won };
+  return { board, update, won, reset };
 };
 
 // Module for game
@@ -60,6 +63,7 @@ const game = (() => {
   // Factory for board
 
   const start = (p1, p2) => {
+    gameStatus.classList.remove('hidden');
     player1 = p1;
     player2 = p2;
     currentPlayer = player1;
@@ -77,11 +81,17 @@ const game = (() => {
   };
 
   const switchTurn = () => {
+    if (end) {
+      return;
+    }
+    
     if (currentPlayer == player1) {
       currentPlayer = player2;
     } else {
       currentPlayer = player1;
     }
+
+    gameStatus.innerText = `${currentPlayer.name}'s turn`;
   };
 
   const display = () => {
@@ -91,12 +101,17 @@ const game = (() => {
       }
 
       if (board.won()) {
-        console.log('Won: ' + currentPlayer.name);
+        gameStatus.innerText = `${currentPlayer.name} won!`;
         end = true;
       }
     };
 
-  return { start, pick };
+  const reset = () => {
+      end = false;
+      board.reset();
+    };
+
+  return { start, pick, reset };
 })();
 
 multiplayer.addEventListener('click', function () {
@@ -106,6 +121,14 @@ multiplayer.addEventListener('click', function () {
   const player1 = playerFactory('Player 1', 'X');
   const player2 = playerFactory('Player 2', 'O');
   game.start(player1, player2);
+});
+
+reset.addEventListener('click', function () {
+  options.classList.remove('hidden');
+  board.classList.add('hidden');
+  gameStatus.classList.add('hidden');
+  gameStatus.innerText = 'Game on!';
+  game.reset();
 });
 
 // Gets the ID of the gameboard space that the user has clicked.
